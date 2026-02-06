@@ -51,14 +51,54 @@ def check_password_strength(password):
     Hint: Use .isdigit(), .isupper(), .islower() and string.punctuation
     """
     # TODO: Implement this function
-    pass
-
+    score = 0;
+    strength = "";
+    checkUpper = False;
+    checkLower = False;
+    checkSpecial = False;
+    checkDigit = False;
+    feedback = "do better"
+    if(len(password)>=12):
+        score =+ 30;
+    elif (len(password)>=8):
+        score =+ 20;
+    for char in password:
+        if char.isdigit():
+            checkDigit = True;
+        if char.isupper():
+            checkUpper = True;
+        if char.islower():
+            checkLower = True;
+        if char in string.punctuation:
+            checkSpecial = True;
+    if password not in COMMON_PASSWORDS:
+        score += 10;
+    if checkLower:
+        score += 20;
+    if checkUpper:
+        score += 20;
+    if checkSpecial:
+        score += 20;
+    if checkDigit:
+        score += 20;
+    
+    ##check strength:
+    if score>=70 :
+        strength = "Strong";
+    elif 69>=score>=40 :
+        strength = "Medium";
+    elif 39>=score :
+        strength = "Weak";
+        
+    #print ({"password": password, "score": score, "strength": strength})
+    return {"password": password, "score": score, "strength": strength, "feedback": feedback}
 
 # ============================================
 # TODO 2: Password Generator
 # ============================================
 
 def generate_password(length=12, use_special=True):
+    pwd=""
     """
     Generate a random secure password.
     
@@ -83,9 +123,22 @@ def generate_password(length=12, use_special=True):
           string.digits, and random.choice()
     """
     # TODO: Implement this function
-    pass
+    characters = string.ascii_uppercase + string.ascii_lowercase + string.digits + string.punctuation
+    
+    if (length<8):
+        length = 8
+    pwd += random.choice(string.ascii_uppercase)
+    pwd += random.choice(string.ascii_lowercase)
+    pwd += random.choice(string.digits)
+    if (use_special):
+        pwd += random.choice(string.punctuation)
+   
+
+    for i in range(length - len(pwd)):
+        pwd += random.choice(characters)
 
 
+    return pwd
 # ============================================
 # Simple Testing
 # ============================================
@@ -109,7 +162,7 @@ if __name__ == "__main__":
             print("❌ TODO 1 should return a dictionary")
             exit()
         
-        required_keys = ["password", "score", "strength", "feedback"]
+        required_keys = ["password", "score", "strength","feedback"]
         missing_keys = [key for key in required_keys if key not in result]
         
         if missing_keys:
